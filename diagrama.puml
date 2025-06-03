@@ -1,0 +1,99 @@
+@startuml SistemaGestionLaboratorios_CasosUso
+
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor #F5F5F5
+  BorderColor #333
+  FontName Arial
+}
+
+actor "Usuario del Sistema" as U <<Persona>> {
+  ' Características del usuario según el código
+  - Interactúa mediante prompts/alertas
+  - Introduce datos manualmente
+  - Selecciona opciones de menú
+}
+
+rectangle "Sistema de Gestión" as S {
+  (UC1: Registrar Laboratorio
+  <size:12>┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+  **Flujo Principal:**
+  1. Solicita nombre
+  2. Pide cantidad equipos
+  3. Solicita edad por equipo
+  4. Crea estructura</size>) as UC1
+
+  (UC2: Ingresar Datos Diarios
+  <size:12>┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+  **Flujo:**
+  1. Muestra lista labs
+  2. Solicita fecha
+  3. Pide datos por equipo:
+     - Horas uso
+     - Usuario
+     - Fallos</size>) as UC2
+
+  (UC3: Generar Reportes
+  <size:12>┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+  **Contenido:**
+  • Promedios uso
+  • Equipos críticos
+  • Usuarios frecuentes
+  • Subutilizados</size>) as UC3
+
+  (UC4: Filtrar Datos
+  <size:12>┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+  **Opciones:**
+  1. Por laboratorio
+  2. Por fecha
+  3. Por usuario
+  4. Por fallos</size>) as UC4
+
+  (UC5: Candidatos Renovación
+  <size:12>┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+  **Criterios:**
+  ✓ Edad ≥5 años
+  ✓ Uso ≥6 hrs/día
+  ✓ Fallos ≥3
+  **Salida:**
+  • Lista priorizada</size>) as UC5
+}
+
+' ------------------------------------------
+' Relaciones principales
+' ------------------------------------------
+U --> UC1 : "1. Selecciona opción\n2. Ingresa datos"
+U --> UC2 : "1. Elige laboratorio\n2. Registra datos"
+U --> UC3 : "Solicita reporte\n(automático)"
+U --> UC4 : "1. Selecciona filtro\n2. Visualiza"
+U --> UC5 : "Solicita lista\n(automática)"
+
+' ------------------------------------------
+' Flujos alternativos/errores
+' ------------------------------------------
+(Entrada inválida) as EI
+UC1 .> EI : "Si datos incorrectos"
+UC2 .> EI : "Si formato erróneo"
+EI --> [Mostrar mensaje error] : "Ej: 'Cantidad no válida'"
+
+' ------------------------------------------
+' Notas técnicas
+' ------------------------------------------
+note top of S
+  **Estructuras de datos clave:**
+  • Laboratorio {nombre, equipos[], registros[]}
+  • Equipo {id, horasUso, fallos, ...}
+  • RegistroDiario {fecha, equipos[]}
+end note
+
+note right of UC5
+  **Código relacionado:**
+  ```javascript
+  function generarCandidatosRenovacion() {
+    // Evalúa umbrales
+    if (equipo.edadEquipo >= 5 || ...) {
+      // Agrega a candidatos
+    }
+    // Ordena por prioridad
+  }
